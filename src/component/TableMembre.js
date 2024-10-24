@@ -27,7 +27,7 @@ function Table(){
         {
             field: 'action',
             headerName : 'Actions',
-            width: 150,
+            width: 250,
             renderCell :(Params) =>(
                 <Buttons
                 variant="contained"
