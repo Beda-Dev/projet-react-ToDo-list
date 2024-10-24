@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { equipe, mis_a_jour_personne , suppression_membre } from "../constante/index.js";
+import { equipe, mis_a_jour_personne  } from "../constante/index.js";
 import Table from "./TableMembre.js";
+
 
 
 

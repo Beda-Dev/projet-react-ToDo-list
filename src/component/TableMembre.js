@@ -2,14 +2,21 @@ import React,{ useState , useEffect } from "react";
 import {DataGrid} from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import { equipe , suppression_membre } from "../constante/index.js";
-import { Button } from "@mui/material";
+import { Button as Buttons } from "@mui/material";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import 'primereact/resources/themes/saga-blue/theme.css'; 
+import 'primereact/resources/primereact.min.css';         
+import 'primeicons/primeicons.css';      
 
 
 
 
 
 function Table(){
-    const [rows , setRows] = useState([])
+    const [rows , setRows] = useState([]) // usestate qui met a jour les lignes
+    const [Dialog , setDialog] = useState(false) // useState qui gère l'etat d'affichage du dialog
+    let sauvegardeLigne = null
+    
     
 
     const colonne = [
@@ -22,15 +29,20 @@ function Table(){
             headerName : 'Actions',
             width: 150,
             renderCell :(Params) =>(
-                <Button 
+                <Buttons
                 variant="contained"
                 color="secondary"
-                onClick={()=>{Suppression(Params.row.id-1)}}
+                onClick={()=>{
+                    sauvegardeLigne=Params.row.id-1
+                    setDialog(true)
+                    dialog()
+
+                }}
                 >
     
                     
         
-                Supprimer</Button>
+                retirer cette personne</Buttons>
             )
         }
     ]
@@ -60,9 +72,7 @@ function Table(){
     
     //FONCTION POUR SUPPRIMER UNE TACHES DE LA LISTE 
     const Suppression = (indeX) =>{
-        
-        const x = window.confirm("Voulez-vous vraiment rétirer cette personne de l'equipe ?",)
-        if(x === true){                        
+                     
             suppression_membre(indeX)
             setRows(rows.filter((_, index)=> index !== indeX))
             console.log(equipe)//appelle de la fonction suppression_tache pour supprimer egalement la taches dans la liste impoter
@@ -74,7 +84,19 @@ function Table(){
     
     
     
+    
+    const dialog = () => {
+        if(Dialog===true){
+        confirmDialog({
+            message: "Voulez-vous vraiment retirer cet élément ?",
+            header: "Confirmation",
+            icon: "pi pi-exclamation-triangle",
+            accept: () => Suppression(sauvegardeLigne), // Action d'acceptation
+            reject: () => setDialog(false), 
+        });
     }
+    };
+    
     
     
 
@@ -90,10 +112,12 @@ function Table(){
                     className="rounded-mg bg-gray"
                   
                 />
+                <ConfirmDialog/>
+                
                 
             </Paper>
 
         );
-}
 
+    }
 export default Table

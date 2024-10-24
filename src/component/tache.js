@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import {taches , mis_a_jour , equipe , suppression_tache} from '../constante/index.js';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import 'primereact/resources/themes/saga-blue/theme.css'; 
+import 'primereact/resources/primereact.min.css';         
+import 'primeicons/primeicons.css';      
+
+
 
 function Creation() {
+    const [Dialog , setDialog] = useState(false) // useState qui gère l'etat d'affichage du dialog
+    let sauvegardeTache = null
+    
   // stock les tâches dans un useState
   const [nouvelle, setNouvelle] = useState(
     {
@@ -41,18 +50,29 @@ function Creation() {
 
   //FONCTION POUR SUPPRIMER UNE TACHES DE LA LISTE 
   const Suppression = (index) =>{
-      const x = window.confirm("Voulez-vous vraiment supprimer cette tâche ?",)
-      if(x === true){
+     
+    
 
           const downgradeTaches = liste.filter((_, i) => i !== index) // retourne un tableau avec l'element supprimer
           setListe(downgradeTaches)                                   // mise a jour dans dans la liste avec le useState
           suppression_tache(index)                                    //appelle de la fonction suppression_tache pour supprimer egalement la taches dans la liste impoter
-    }
+    
 
 
 
 
   }
+  const dialog = () => {
+    if(Dialog===true){
+    confirmDialog({
+        message: "Voulez-vous vraiment retirer cet élément ?",
+        header: "Confirmation",
+        icon: "pi pi-exclamation-triangle",
+        accept: () => Suppression(sauvegardeTache),
+        reject: () => setDialog(false), 
+    });
+}
+};
 
 
 
@@ -120,6 +140,7 @@ function Creation() {
             >Créer</button>
         </form>
       </fieldset>
+      <ConfirmDialog/>
 
 
       <fieldset className='formulistetache'>
@@ -143,7 +164,12 @@ function Creation() {
 
               <button  key={index} className='justify-end px-5 rounded-lg text-sm font-medium
                 text-white bg-red-600 duration-100 hover:bg-white hover:text-black' 
-                onClick={() => Suppression(index) }
+                onClick={() =>{
+                   sauvegardeTache = index
+                   setDialog(true)
+                    dialog()
+                  }
+                  }
                 >Supprimer la tache
               </button>
               
